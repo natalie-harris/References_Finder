@@ -183,11 +183,34 @@ chrome_options = Options()
 # add the "--headless" argument
 # chrome_options.add_argument("--headless")
 
-# set up openai api
-openai_key = "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"
-openai.api_key = openai_key
+# set up openai api and tesseract info
+openai_key = ""
+poppler_bin_path = r''
+tesseract_path = r''
 
-download_dir = r'E:\NIMBioS\SBW\SBW Literature\References Finder'
+if len(openai_key) <= 0:
+    print("You must set the openai_key variable to your api key!")
+    exit()
+elif len(poppler_bin_path) <= 0:
+    print("You must set the poppler_bin_path variable to your poppler path!")
+    exit()
+elif len(tesseract_path) <= 0:
+    print("You must set the tesseract_path variable to your tesseract path!")
+    exit()
+
+openai.api_key = openai_key
+pytesseract.pytesseract.tesseract_cmd = tesseract_path
+
+
+download_dir = r''
+for_analysis_dir = r''
+if len(download_dir) <= 0:
+    print("You must specify your download directory in the download_dir variable!")
+    exit()
+elif len(for_analysis_dir) <= 0:
+    print("You must specify where your pdfs are in the for_analysis_dir variable!")
+    exit()
+
 prefs = {
     "download.default_directory": download_dir, 
     "download.prompt_for_download": False,
@@ -200,14 +223,9 @@ chrome_options.add_experimental_option('prefs', prefs)
 system_message_1 = 'Please extract all the titles of documents from this reference list:\n'
 system_message_2 = "Please extract all the titles of documents that are likely about eastern spruce budworm outbreaks. Only include titles about eastern spruce budworm outbreaks\n"
 
-poppler_bin_path = r'C:\Users\natal\OneDrive\Documents\GitHub\References_Finder\windows_venv\poppler-23.08.0\Library\bin'
-file_path = r'E:\NIMBioS\SBW\SBW Literature\Canada Government\pdfs\8982.pdf'
-tesseract_path = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-pytesseract.pytesseract.tesseract_cmd = tesseract_path
-
 downloaded_urls = set()
 
-pdf_files = glob.glob(r"E:\NIMBioS\SBW\SBW Literature\Canada Government\pdfs\*.pdf")
+pdf_files = glob.glob(for_analysis_dir)
  
 initial_url = 'https://google.com/'
 
